@@ -22,6 +22,12 @@ module Spaceship
     end
   end
 
+  class ProgramLicenseAgreementNotAccepted < BasicPreferredInfoError
+    def show_github_issues
+      false
+    end
+  end
+
   class AppleIDAndPrivacyAcknowledgementNeeded < BasicPreferredInfoError
     def show_github_issues
       false

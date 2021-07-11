@@ -218,6 +218,8 @@ module Spaceship
           error_code = error['code']
           if error_code == "FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED"
             raise ProgramLicenseAgreementUpdated, format_errors(response)
+          elsif error_code == "FORBIDDEN_ERROR.PLA_NOT_ACCEPTED"
+            raise ProgramLicenseAgreementNotAccepted, format_errors(response)
           else
             raise AccessForbiddenError, format_errors(response)
           end

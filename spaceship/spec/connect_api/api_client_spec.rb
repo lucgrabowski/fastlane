@@ -116,6 +116,15 @@ describe Spaceship::ConnectAPI::APIClient do
       end.to raise_error(Spaceship::ProgramLicenseAgreementUpdated)
     end
 
+    it 'raise on 403 with program license agreement not accepted' do
+      body = JSON.generate({ "errors": [{ "code": "FORBIDDEN_ERROR.PLA_NOT_ACCEPTED" }] })
+      stub_client_request(client.hostname, 403, body)
+
+      expect do
+        client.get('')
+      end.to raise_error(Spaceship::ProgramLicenseAgreementNotAccepted)
+    end
+
     it 'raise on 403' do
       body = JSON.generate({ "errors": [] })
       stub_client_request(client.hostname, 403, body)
@@ -184,6 +193,20 @@ describe Spaceship::ConnectAPI::APIClient do
         expect do
           client.send(:handle_error, mock_response)
         end.to raise_error(Spaceship::ProgramLicenseAgreementUpdated)
+      end
+
+      it 'raises ProgramLicenseAgreementNotAccepted with no errors in body FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED' do
+        allow(mock_response).to receive(:body).and_return({
+          "errors" => [
+            {
+              "code" => "FORBIDDEN_ERROR.PLA_NOT_ACCEPTED"
+            }
+          ]
+        })
+
+        expect do
+          client.send(:handle_error, mock_response)
+        end.to raise_error(Spaceship::ProgramLicenseAgreementNotAccepted)
       end
 
       it 'raises AccessForbiddenError with no errors in body' do
