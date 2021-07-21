@@ -28,7 +28,7 @@ module Spaceship
           users_request_client.delete("users/#{user_id}")
         end
 
-        # Change app permissions for user
+        # Add app permissions for user
         def add_user_visible_apps(user_id: nil, app_ids: nil)
           body = {
             data: app_ids.map do |app_id|
@@ -40,6 +40,34 @@ module Spaceship
           }
 
           users_request_client.post("users/#{user_id}/relationships/visibleApps", body)
+        end
+
+        # Replace app permissions for user
+        def replace_user_visible_apps(user_id: nil, app_ids: nil)
+          body = {
+            data: app_ids.map do |app_id|
+              {
+                type: "apps",
+                id: app_id
+              }
+            end
+          }
+
+          users_request_client.patch("users/#{user_id}/relationships/visibleApps", body)
+        end
+
+        # Remove app permissions for user
+        def remove_user_visible_apps(user_id: nil, app_ids: nil)
+          body = {
+            data: app_ids.map do |app_id|
+              {
+                type: "apps",
+                id: app_id
+              }
+            end
+          }
+
+          users_request_client.delete("users/#{user_id}/relationships/visibleApps", body)
         end
 
         # Get app permissions for user
