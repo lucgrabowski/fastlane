@@ -222,7 +222,7 @@ module Spaceship
         when 403
           error = (body['errors'] || []).first || {}
           error_code = error['code']
-          if error_code == "FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED"
+          if error_code == "FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED" || error_code == "FORBIDDEN_ERROR.PLA_NOT_ACCEPTED"
             raise ProgramLicenseAgreementUpdated, format_errors(response)
           else
             raise AccessForbiddenError, format_errors(response)
